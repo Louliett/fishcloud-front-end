@@ -154,18 +154,32 @@ function randomShit(){
     redirect: 'follow'
   };
 
-  fetch('https://fishcloud.azurewebsites.net/fish/fish-locations', requestOptions)
+  fetch('http://fishcloud.azurewebsites.net/fish/locations', requestOptions)
     .then(response => response.json())
     .then(result => 
 generateMap(result))
     .catch(error => console.error(error));
 
 function generateMap(data){
+    var lake=$('#lake');
+    
+ 
     
     for(var i=0;i<data.length;i++){
           var uluru = {lat: parseFloat(data[i]['latitude']), lng: parseFloat(data[i]['longitude'])};
 
-
+lake.append($("<option></option>")
+                    .attr("value", data[i]['loc_name'])
+                    .attr("data-lat", data[i]['latitude'])
+                    .attr("data-lon", data[i]['longitude'])
+                    .text( data[i]['loc_name'])); 
+        lake.change(function(){
+              var option= $(this).find(":selected");
+            var lat=parseFloat(option.attr('data-lat'));
+            var lon=parseFloat(option.attr('data-lon'));
+              map.setCenter({lat: lat, lng: lon});
+                    map.setZoom(12);
+        })
   var marker = new google.maps.Marker({position: uluru, map: map, title: data[i]['loc_name']});
     marker.addListener('click',()=>{
         loadData(event.target.title)
@@ -178,7 +192,9 @@ function generateMap(data){
 }
 
 function loadData(name){
-
+    $('.noInfo').attr('hidden','hidden');
+    $('.markerInfo').removeAttr('hidden');
+$('.scrollto').html('SHOWING DATA FOR: <h3 class="name scrollto">'+name+'</h3>')
 
 const data = {
       location: name
@@ -195,7 +211,7 @@ const data = {
       redirect: 'follow'
     };
 
-    fetch('https://fishcloud.azurewebsites.net/fish/location-fish', requestOptions)
+    fetch('http://fishcloud.azurewebsites.net/fish/location-fish', requestOptions)
       .then(response => response.json())
       .then(data => {
         generateData(data);
@@ -211,3 +227,8 @@ drawChart(data);
     drawChart1(data);
     
 }
+$('.locationpickertext').click(
+function(){$('html, body').animate({
+        scrollTop: 0
+    }, 400);
+          });
