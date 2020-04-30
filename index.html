@@ -1,0 +1,42 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <link rel="stylesheet" href="css/index.css">
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
+
+</head>
+
+  <body>
+  
+<h3>My Google Maps Demo</h3>
+<!--The div element for the map -->
+<div id="map"></div>
+      
+          <div class='markerInfo'>
+              <h3 class='scrollto'>Graphs and shit</h3>
+<div id="piechart"></div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<div class='charts'>
+
+              <div class='chartdiv' id="piechartlifetime"></div>
+              <div class='chartdiv' id="piechartmonth"></div>
+              <div class='chartdivextra' id="columnchartyear"></div>
+              <div class='chartdivextra' id="columnchart1"></div>
+    </div>
+      </div>
+<!-- Replace the value of the key parameter with your own API key. -->
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUQjun_RR9-g-zbRqqLWIFMyCrZMqY5KU&callback=initMap">
+</script>
+      
+     <script src="js/index.js"></script>
+
+  </body>
+
+</html>
