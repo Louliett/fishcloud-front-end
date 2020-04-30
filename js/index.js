@@ -154,7 +154,7 @@ function randomShit(){
     redirect: 'follow'
   };
 
-  fetch('http://192.168.0.105:3001/fish/fish-locations', requestOptions)
+  fetch('http://fishcloud.azurewebsites.net/fish/fish-locations', requestOptions)
     .then(response => response.json())
     .then(result => 
 generateMap(result))
@@ -195,7 +195,7 @@ const data = {
       redirect: 'follow'
     };
 
-    fetch('http://192.168.0.105:3001/fish/location-fish', requestOptions)
+    fetch('http://fishcloud.azurewebsites.net/fish/location-fish', requestOptions)
       .then(response => response.json())
       .then(data => {
         generateData(data);
