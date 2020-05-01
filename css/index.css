@@ -28,6 +28,7 @@ padding:40px;
     height:auto;
         text-align:center;
     padding-top:40px;
+    overflow:auto;
 
 }
 .chartdivextra{
@@ -106,4 +107,110 @@ font-family: 'Noto Sans', sans-serif;
 }
 #lake{
     width:60%;
+}
+
+.pathColor0{
+    fill:#232C33cc;
+}
+.pathColor1{
+    fill:#EB5160;
+}
+.pathColor2{
+    fill:#EB5160;
+}
+.logo{
+    width:100%;
+    height:240px;
+    padding:14px;
+    text-align: center;
+}
+.section{
+    position:relative;
+    width:33%;
+    height:100%;
+    display:inline-block;
+}
+.companyTitle{
+    position: absolute;
+    font-size:48px;
+    color: #EB5160cc;
+font-family: 'Noto Sans', sans-serif;
+      top:50%;
+    left: 50%;
+transform: translate(-50%, -150%);  
+
+}
+.companyDescription{
+        position: absolute;
+    font-size:28px;
+    color: #EB5160cc;
+font-family: 'Noto Sans', sans-serif;
+      top:50%;
+    left: 50%;
+transform: translate(-50%, -100%);  
+
+}
+.stolen{
+        position: absolute;
+          top:50%;
+    left: 50%;
+transform: translate(-50%, -50%);  
+}
+.photo{
+    width:340px;
+    height:408px;
+    overflow:hidden;
+    background-color:#ffffff;
+}
+.photo img{
+    object-fit:cover;
+    width:100%;
+    height:79%;
+        transform: scale(1);
+
+    transition: 0.3s;
+}
+.photo img:hover{
+    transform: scale(1.1);
+    transition: 0.3s;
+     
+}
+.gallery{
+    margin-top:40px;
+    padding:14px;
+    text-align:center;
+    background-color:#61898544;
+}
+tr{
+    padding:20px 8px;
+}
+td{
+    padding:20px 4px;
+}
+.phototext{
+    color: #000000cc;
+font-family: 'Noto Sans', sans-serif;
+}
+.photoFishType{
+    font-size:16px;
+}
+.photoDate{
+    font-size:9px;
+}
+.photoOwner{
+    font-size:9px;
+}
+.photoTable{
+    width:100%;
+}
+.photoTable tr td{
+    padding:0px;
+    text-align: center;
+    
+    
+    
+    
+}
+.galleryTable{
+    width:100%;
 }

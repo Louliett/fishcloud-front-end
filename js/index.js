@@ -99,7 +99,7 @@ var data = google.visualization.arrayToDataTable([
 
 
 function drawChart1(fishData){
-           //columnchart
+       /*    //columnchart
      var data = google.visualization.arrayToDataTable([
         ['Type', 'Lax', 'Squid', 'Octopus', 'Magicarp',
          'Plastic Bag'],
@@ -137,6 +137,7 @@ function drawChart1(fishData){
         chart.draw(data, google.charts.Bar.convertOptions(options));
 
     //columnchart
+    */
 }
 
 
@@ -154,7 +155,7 @@ function randomShit(){
     redirect: 'follow'
   };
 
-  fetch('http://fishcloud.azurewebsites.net/fish/locations', requestOptions)
+  fetch('http://fishcloud.azurewebsites.net/locations/locations', requestOptions)
     .then(response => response.json())
     .then(result => 
 generateMap(result))
@@ -211,7 +212,7 @@ const data = {
       redirect: 'follow'
     };
 
-    fetch('http://fishcloud.azurewebsites.net/fish/location-fish', requestOptions)
+    fetch('http://fishcloud.azurewebsites.net/fish/fish-in-location', requestOptions)
       .then(response => response.json())
       .then(data => {
         generateData(data);
