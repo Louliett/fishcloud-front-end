@@ -195,7 +195,7 @@ lake.append($("<option></option>")
 function loadData(name){
     $('.noInfo').attr('hidden','hidden');
     $('.markerInfo').removeAttr('hidden');
-$('.scrollto').html('SHOWING DATA FOR: <h3 class="name scrollto">'+name+'</h3>')
+$('.scrollto').html('<h3 class="name scrollto">'+name+'</h3>')
 
 const data = {
       location: name
@@ -233,3 +233,20 @@ function(){$('html, body').animate({
         scrollTop: 0
     }, 400);
           });
+
+
+  $(window).scroll(function() {
+
+    if ($(this).scrollTop() >= 19) {
+            $('.logo').attr('class','logomoved');
+    $('.stolen').attr('class','stolenmoved');
+   
+
+
+    }
+    else {
+                 $('.logomoved').attr('class','logo');
+    $('.stolenmoved').attr('class','stolen');
+
+    }
+    });
