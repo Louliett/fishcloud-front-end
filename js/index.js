@@ -212,7 +212,7 @@ const data = {
       redirect: 'follow'
     };
 
-    fetch('http://fishcloud.azurewebsites.net/fish/fish-in-location', requestOptions)
+    fetch('https://fishcloud.azurewebsites.net/fish/fish-in-location', requestOptions)
       .then(response => response.json())
       .then(data => {
         generateData(data);
