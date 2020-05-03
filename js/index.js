@@ -155,7 +155,7 @@ function randomShit(){
     redirect: 'follow'
   };
 
-  fetch('http://fishcloud.azurewebsites.net/locations/locations', requestOptions)
+  fetch('https://fishcloud.azurewebsites.net/locations/locations', requestOptions)
     .then(response => response.json())
     .then(result => 
 generateMap(result))
