@@ -32,7 +32,6 @@ function initMap() {
   // The marker, positioned at Uluru
 
 google.maps.event.addListener(map, 'zoom_changed', function() {
-    console.log(map.getZoom(), 'what the fuck');
     if (map.getZoom()<11) {
                 showMainMarkers();
 
@@ -118,22 +117,23 @@ function  deleteLocalMarkers(){
     localMarkers=[];
 }
 
-function drawChart(fishData1) {
+function drawChart(fishData1, betterFishArray) {
     var fishData=[]
+    var fuckingColoursAgain=[...new Set(fishData1.map(x=>x.colour))]
 
     for(var i=0; i<fishData1.length;i++){
         fishData.push(Object.values(fishData1[i]))
         }
-    fishData.unshift(['Type', 'Quantity', { role: 'style' }, {role: 'style'}])
-    console.log(fishData)
-        
+    fishData.unshift(['Type', 'Quantity', { role: 'style' }, { role: 'style' }, { role: 'style' }])
+    var stupidArray=[];
+    for(var i=0; i<fuckingColoursAgain.length;i++){
+        stupidArray.push({color:fuckingColoursAgain[i]})
+    }
+    var stupidObject=Object.assign({},stupidArray);
   var data = google.visualization.arrayToDataTable(fishData);
 
-  var options = {'title':'Fish caught lifetime',  pieHole: 0.2,'width':580, 'height':400, slices: {  
- /*     0:{color:fishData[1][2]},
-      1:{color:fishData[2][2]},
-      2: {color:fishData[3][2],offset: 0.2}*/
-}};
+  var options = {'title':'Fish caught lifetime',  pieHole: 0.2,'width':580, 'height':400, slices:stupidObject
+};
 
   var chart = new google.visualization.PieChart(document.getElementById('piechartlifetime'));
   chart.draw(data, options);
@@ -150,29 +150,32 @@ function drawChart(fishData1) {
   var chart = new google.visualization.PieChart(document.getElementById('piechartmonth'));
   chart.draw(data, options);
     //piechartend
+    
+    
+    
+    
  //columnchart
+    console.log(fishData, fishData1, betterFishArray)
+    var types=[...fishData1.map(x=>x.name)]
+    //types.push({role:'style'});
+    types.unshift('Month');
+    var numbers=[...fishData1.map(x=>x.count)]
+    var colors=[...fishData1.map(x=>x.colour)]
+    //var times=[...fishData1.map(x=>x.time)]
+    var months=[['Januari'], ['Februari'], ['Mars'], ['April'], ['Maj'], ['Juni'], ['Juli'], ['Augusti'], ['September'], ['Oktober'], ['November'], ['December']]
+    
+    
 var data = google.visualization.arrayToDataTable([
-        ['Type', 'Lax', 'Squid', 'Octopus', 'Magicarp',
-         'Plastic Bag', 'Literature', { role: 'annotation' } ],
-        ['Januari', randomShit(), randomShit(), randomShit(), randomShit(), randomShit(), randomShit(), ''],
-        ['Februari', randomShit(), randomShit(), randomShit(), randomShit(), randomShit(), randomShit(), ''],
-        ['Mars', randomShit(),randomShit(),randomShit(),randomShit(),randomShit(),randomShit(), ''],
-        ['April', randomShit(),randomShit(),randomShit(),randomShit(),randomShit(),randomShit(), ''],
-        ['Maj', randomShit(),randomShit(),randomShit(),randomShit(),randomShit(),randomShit(), ''],
-        ['Juni', randomShit(),randomShit(),randomShit(),randomShit(),randomShit(),randomShit(), ''],
-        ['Juli', randomShit(),randomShit(),randomShit(),randomShit(),randomShit(),randomShit(), ''],
-        ['Augusti', randomShit(),randomShit(),randomShit(),randomShit(),randomShit(),randomShit(), ''],
-        ['September', randomShit(),randomShit(),randomShit(),randomShit(),randomShit(),randomShit(), ''],
-        ['October', randomShit(),randomShit(),randomShit(),randomShit(),randomShit(),randomShit(), ''],
-        ['November', randomShit(),randomShit(),randomShit(),randomShit(),randomShit(),randomShit(), ''],
-        ['December', randomShit(),randomShit(),randomShit(),randomShit(),randomShit(),randomShit(), '']
+        types,
+        ['Januari', numbers[0], numbers[1], numbers[2]],
+    ['Februari', numbers[0], numbers[1], numbers[2]]
       ]);
 
       var view = new google.visualization.DataView(data);
       view.setColumns([0, 1,{ calc: "stringify",
                          sourceColumn: 1,
                          type: "string",
-                         role: "annotation" },2,3,4,5]);
+                         role: "annotation" },2,3]);
 
             var options = {title:'Total amount of fish caught per moonth',
         width: document.width,
@@ -258,7 +261,6 @@ generateMap(result))
 function generateMap(data){
     var lake=$('#lake');
     
-
     for(var i=0;i<data.length;i++){
           var uluru = {lat: parseFloat(data[i]['latitude']), lng: parseFloat(data[i]['longitude'])};
 
@@ -270,7 +272,6 @@ lake.append($("<option></option>")
         
   var marker = new google.maps.Marker({position: uluru, map: map, title: data[i]['name']});
     marker.addListener('click',()=>{
-        console.log(event.target)
     map.setCenter(marker.getPosition());
                     map.setZoom(12);
         loadData(event.target.title);
@@ -321,17 +322,38 @@ const data = {
     fetch('https://fishcloud.azurewebsites.net/fish/fish-in-location', requestOptions)
       .then(response => response.json())
       .then(data => {
+console.log(data);
+
         globalData=data;
 
         generateData(data, name);
-
       }).catch(error => console.error(error));
 }
 function generateData(fishData, locationName){
-var uniqueUrl=[...new Set(fishData.map(x=>x.default_image))];
-            var uniqueFish=[...fishData.map(x=>x.name)];
-    var uniqueColors=[...new Set(fishData.map(x=>x.colour))];
+    console.log(fishData);
+            var uniqueFish=[...(fishData.map(x=>x.name))];
+    var average=[];
+    var weight=[];
+    var length=[];
+    var height=[];
+    for(var i=0; i<fishData.length;i++){
+         weight=[];
+    length=[];
+    height=[];
+      for(var q=0; q<uniqueFish.length; q++){
+          if(uniqueFish[q]===fishData[i]['name']){
+            weight.push(returnFloat(fishData[i]['kg']));  
+            length.push(returnFloat(fishData[i]['length']));  
+            height.push(returnFloat(fishData[i]['width']));  
+              
+          }
+          
+      }
+        average.push([(weight.reduce((a, b) => a + b, 0))/weight.length, (length.reduce((a, b) => a + b, 0))/length.length, (height.reduce((a, b) => a + b, 0))/height.length])
+        console.log(average);
+    }
     
+
     var uniqueBoss=[{name:[...new Set(fishData.map(x=>x.name))],colour:[...new Set(fishData.map(x=>x.colour))],default_image:[...new Set(fishData.map(x=>x.default_image))]}]
     
    
@@ -339,32 +361,39 @@ var fishArray=[];
 
 var count = {};
 uniqueFish.forEach(function(i) { count[i] = (count[i]||0) + 1;});
-        var anootherArray=Object.entries(count);
-    var combined=[];
-    for(var i=0;i<anootherArray.length;i++){
-        anootherArray[i].push(uniqueColors[i]);
-    }
+
         var combined1=[];
-
     for(var q=0; q<uniqueBoss[0]['name'].length; q++){
-            combined1.push({name:uniqueBoss[0]['name'][q], colour:uniqueBoss[0]['colour'][q], default_image:uniqueBoss[0]['default_image'][q], count: count[uniqueBoss[0]['name'][q]]})
-        
+           /* combined1.push({name:uniqueBoss[0]['name'][q], colour:uniqueBoss[0]['colour'][q], default_image:uniqueBoss[0]['default_image'][q], count: count[uniqueBoss[0]['name'][q]]})*/
+        combined1.push({name:uniqueBoss[0]['name'][q], count: count[uniqueBoss[0]['name'][q]], colour:uniqueBoss[0]['colour'][q], default_image:uniqueBoss[0]['default_image'][q], average: average[q]})
         
     }
- 
 
+    
+    var betterFishArray=[];
+    for(var i=0; i<fishData.length; i++){
+        betterFishArray.push({name:fishData[i]['name'], color:fishData[i]['colour'], time:timestamp(parseInt(fishData[i]['timestamp']))})
+    }
+    
+    var userUploads=[[...new Set(fishData.map(x=>x.url))], [...new Set(fishData.map(x=>x.name))], [...new Set(fishData.map(x=>x.timestamp))], [...new Set(fishData.map(x=>x.user))]]
+    
+    
+    
 
-drawChart(combined1);
+//drawChart(combined1, betterFishArray);
     
     
     
-    drawChart1(anootherArray);
     
     fishinlake(combined1);
 localPointers(locationName);    
     
     $('#select').attr('class', 'selectactive');
     $('#viewdatabutton').attr('class', 'viewactive');
+    
+    
+    loadGallery(userUploads);
+    
     
     
     
@@ -391,7 +420,75 @@ function(){$('html, body').animate({
     $('.stolenmoved').attr('class','stolen');
 
     }
+      console.log($(this).scrollTop())
+          if ($(this).scrollTop() >= 768) {
+                  
+     $('#select').attr('class', 'selectinactive');
+    $('#viewdatabutton').attr('class', 'viewinactive');
+          }
+
+      
     });
+
+function returnFloat(numberstring){
+
+    var number= numberstring.match(/\d+/)[0];
+    
+    return number;
+    
+    
+    
+}
+
+function timestamp(time){
+    var timeObject={year:0, month:0, day:0, hour:0, minute:0, seconds:0};
+
+var date = new Date(time);
+    timeObject.year=date.getFullYear();
+    timeObject.month=date.getMonth()+1;
+    timeObject.day=date.getDay()+3;
+    timeObject.hour=date.getHours();
+    timeObject.minute=date.getMinutes();
+    timeObject.seconds=date.getSeconds();
+
+
+//var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    
+    
+    return timeObject;
+    
+    
+}
+
+
+
+
+
+function loadGallery(data){
+    for(var i=0; i<data[0].length; i++){
+    var time=timestamp(parseInt(data[2][i]))
+    var timetext='Date: '+time.hour+':'+time.minute+' on '+time.day+'/'+time.month+'/'+time.year;
+    var gallery=document.getElementById('galleryContent');
+    var row = gallery.rows[gallery.rows.length-1];
+            var cellsLength=row.cells.length;
+
+    if(cellsLength >= 3){
+       gallery.insertRow(gallery.rows.length) 
+    row = gallery.rows[gallery.rows.length-1];
+    var cellsLength=row.cells.length;
+        var x = row.insertCell(row.cells.length-1);
+   x.innerHTML = '<div class=photo> <img src="'+data[0][i].replace('.','https://fishcloud.azurewebsites.net')+'"> <table class="photoTable"> <thead> <tr> <td colspan="2"><p class="photoFishType phototext">'+data[1][i]+'</p></td></tr><tr> <td><p class="photoDate phototext">'+timetext+'</p></td><td><p class="photoOwner phototext">BY: '+data[3][i]+'</p></td></tr></thead></table></div>'; 
+    }else{
+            var cellsLength=row.cells.length;
+
+    var x = row.insertCell(row.cells.length-1);
+     x.innerHTML = '<div class=photo> <img src="'+data[0][i].replace('.','https://fishcloud.azurewebsites.net')+'"> <table class="photoTable"> <thead> <tr> <td colspan="2"><p class="photoFishType phototext">'+data[1][i]+'</p></td></tr><tr> <td><p class="photoDate phototext">'+timetext+'</p></td><td><p class="photoOwner phototext">BY: '+data[3][i]+'</p></td></tr></thead></table></div>';
+
+    }
+        }
+}
+
+
 function fishinlake(data){
         var container=document.getElementById('fishfound');
     container.innerHTML='';
@@ -402,10 +499,11 @@ function fishinlake(data){
         var quantity=data[i]['count'];
         var color=data[i]['colour'];
         var defaultUrl=data[i]['default_image'].replace('.','https://fishcloud.azurewebsites.net');
+        var average=data[i]['average'];
 
     var cardDiv=document.createElement('div');
     cardDiv.setAttribute('class','fishdisplay')
-    cardDiv.innerHTML=svgbrush.replace('REPLACETHISSHIT',color)+'<div class="information"> <img src="'+defaultUrl+'" class="fishdisplayimage"> <p class="fishdisplaytitle">'+name+'</p><p class="fishdisplaynumber">'+quantity+'</p></div>';
+    cardDiv.innerHTML=svgbrush.replace('REPLACETHISSHIT',color)+'<div class="information"> <img src="'+defaultUrl+'" class="fishdisplayimage"> <p class="fishdisplaytitle">'+name+'</p><p class="fishdisplaynumber">'+quantity+'</p></div>'+'<div class="mediocre"><p class="fishdisplaymediocretitle">Reported Avg.</p><p class="fishdisplaymediocredetails">wt: '+average[0]+' kg</p><p class="fishdisplaymediocredetails">lt: '+average[1]+' cm</p><p class="fishdisplaymediocredetails">ht: '+average[2]+' cm</p></div>';
             container.appendChild(cardDiv);
 
     }
