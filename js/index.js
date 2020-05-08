@@ -134,18 +134,34 @@ function drawChart(fishData1, betterFishArray) {
 
   var options = {'title':'Fish caught lifetime',  pieHole: 0.2,'width':580, 'height':400, slices:stupidObject
 };
-
+    
   var chart = new google.visualization.PieChart(document.getElementById('piechartlifetime'));
   chart.draw(data, options);
     //piechartend
-    var chartArray=[['Type', 'Quantity', { role: 'style' }],['none',1,'gold']]
     //piechartstart
+    
+    
+        var uniqueFish=[...new Set(betterFishArray.map(x=>x.name))];
+
+    var organizedFish=organizeFish(betterFishArray);
+    var date=new Date();
+    organizedFish=organizedFish[date.getMonth()]
+    var organizedOganizedFish=[];
+    for(var i=0; i<uniqueFish.length; i++){
+        if(organizedFish[uniqueFish[i]]){
+            organizedOganizedFish.push([organizedFish[uniqueFish[i]].name, organizedFish[uniqueFish[i]].count, organizedFish[uniqueFish[i]].color])
+        }
+        
+    }
+    organizedOganizedFish.unshift(['Type', 'Quantity', { role: 'style' }]);
+console.log(organizedOganizedFish,'never work from the frist time')
+        var chartArray=organizedOganizedFish;
+
       var data = google.visualization.arrayToDataTable(chartArray);
 
     
     
-      var options = {'title':'Fish caught last month',pieHole: 0.2,'width':580, 'height':400, slices: {  
-      0:{color:'#cccccc'}}};
+      var options = {'title':'Fish caught last month',pieHole: 0.2,'width':580, 'height':400, slices:stupidObject};
 
   var chart = new google.visualization.PieChart(document.getElementById('piechartmonth'));
   chart.draw(data, options);
@@ -155,32 +171,47 @@ function drawChart(fishData1, betterFishArray) {
     
     
  //columnchart
-    console.log(fishData, fishData1, betterFishArray)
-    var types=[...fishData1.map(x=>x.name)]
-    //types.push({role:'style'});
-    types.unshift('Month');
-    var numbers=[...fishData1.map(x=>x.count)]
-    var colors=[...fishData1.map(x=>x.colour)]
-    //var times=[...fishData1.map(x=>x.time)]
-    var months=[['Januari'], ['Februari'], ['Mars'], ['April'], ['Maj'], ['Juni'], ['Juli'], ['Augusti'], ['September'], ['Oktober'], ['November'], ['December']]
+    var uniqueFish=[...new Set(betterFishArray.map(x=>x.name))];
+    var uniqueFishWithColor=[];
+    for(var i=0; i<uniqueFish.length; i++){
+        uniqueFishWithColor.push(uniqueFish[i]);
+        uniqueFishWithColor.push({role:'style'});
+        
+    }
+    uniqueFishWithColor.unshift('Type');
+    var organizedFish=organizeFish(betterFishArray);
+    var dataData=[uniqueFishWithColor];
+    
+    for(var i=0; i<organizedFish.length; i++){
+        var rowData=[organizedFish[i].month]
+        for(var q=0; q<uniqueFishWithColor.length;q++){
+            
+            if(organizedFish[i][uniqueFishWithColor[q]]){
+            rowData.push(organizedFish[i][uniqueFishWithColor[q]].count)
+            rowData.push(organizedFish[i][uniqueFishWithColor[q]].color)
+            }
+        }
+        
+        while(rowData.length<uniqueFishWithColor.length){
+            rowData.push(0);
+            rowData.push('#cccccc');
+        }
+        dataData.push(rowData);
+    }
     
     
-var data = google.visualization.arrayToDataTable([
-        types,
-        ['Januari', numbers[0], numbers[1], numbers[2]],
-    ['Februari', numbers[0], numbers[1], numbers[2]]
-      ]);
+var data = google.visualization.arrayToDataTable(dataData);
 
       var view = new google.visualization.DataView(data);
-      view.setColumns([0, 1,{ calc: "stringify",
+      /*view.setColumns([0, 1,{ calc: "stringify",
                          sourceColumn: 1,
                          type: "string",
-                         role: "annotation" },2,3]);
+                         role: "annotation" },2,3]);*/
 
             var options = {title:'Total amount of fish caught per moonth',
         width: document.width,
         height: 590,
-        legend: { position: 'top', maxLines: 24 },
+        legend: { position: 'none', maxLines: 24 },
         bar: { groupWidth: '88%' },
         isStacked: true,
       };
@@ -188,53 +219,6 @@ var data = google.visualization.arrayToDataTable([
       chart.draw(view, options);
     //columnchart
     
-}
-
-
-
-
-
-
-function drawChart1(fishData){
-       /*    //columnchart
-     var data = google.visualization.arrayToDataTable([
-        ['Type', 'Lax', 'Squid', 'Octopus', 'Magicarp',
-         'Plastic Bag'],
-        ['Januari', randomShit(), randomShit(), randomShit(), randomShit(), randomShit()],
-        ['Februari', randomShit(), randomShit(), randomShit(), randomShit(), randomShit(),],
-        ['Mars', randomShit(),randomShit(),randomShit(),randomShit(),randomShit()],
-        ['April', randomShit(),randomShit(),randomShit(),randomShit(),randomShit()],
-        ['Maj', randomShit(),randomShit(),randomShit(),randomShit(),randomShit()],
-        ['Juni', randomShit(),randomShit(),randomShit(),randomShit(),randomShit()],
-        ['Juli', randomShit(),randomShit(),randomShit(),randomShit(),randomShit()],
-        ['Augusti', randomShit(),randomShit(),randomShit(),randomShit(),randomShit()],
-        ['September', randomShit(),randomShit(),randomShit(),randomShit(),randomShit()],
-        ['October', randomShit(),randomShit(),randomShit(),randomShit(),randomShit()],
-        ['November', randomShit(),randomShit(),randomShit(),randomShit(),randomShit()],
-        ['December', randomShit(),randomShit(),randomShit(),randomShit(),randomShit()]
-      ]);
-
-
-    
-    
-    
-        var options = {
-          chart: {
-            title: 'Fish caught per month not aggregated',
-            subtitle: 'Stats from 2019',
-                   legend: { position: 'top', maxLines: 20 },
-        bar: { groupWidth: '75%' },
-        isStacked: true,
-          }
-        };
-
-
-   var chart = new google.charts.Bar(document.getElementById('columnchartyear'));
-
-        chart.draw(data, google.charts.Bar.convertOptions(options));
-
-    //columnchart
-    */
 }
 
 
@@ -330,7 +314,6 @@ console.log(data);
       }).catch(error => console.error(error));
 }
 function generateData(fishData, locationName){
-    console.log(fishData);
             var uniqueFish=[...(fishData.map(x=>x.name))];
     var average=[];
     var weight=[];
@@ -349,10 +332,8 @@ function generateData(fishData, locationName){
           }
           
       }
-        average.push([(weight.reduce((a, b) => a + b, 0))/weight.length, (length.reduce((a, b) => a + b, 0))/length.length, (height.reduce((a, b) => a + b, 0))/height.length])
-        console.log(average);
+        average.push([fishData[i]['kg'], fishData[i]['length'], fishData[i]['width']]);
     }
-    
 
     var uniqueBoss=[{name:[...new Set(fishData.map(x=>x.name))],colour:[...new Set(fishData.map(x=>x.colour))],default_image:[...new Set(fishData.map(x=>x.default_image))]}]
     
@@ -375,12 +356,12 @@ uniqueFish.forEach(function(i) { count[i] = (count[i]||0) + 1;});
         betterFishArray.push({name:fishData[i]['name'], color:fishData[i]['colour'], time:timestamp(parseInt(fishData[i]['timestamp']))})
     }
     
-    var userUploads=[[...new Set(fishData.map(x=>x.url))], [...new Set(fishData.map(x=>x.name))], [...new Set(fishData.map(x=>x.timestamp))], [...new Set(fishData.map(x=>x.user))]]
+    var userUploads=[[fishData.map(x=>x.url)], [fishData.map(x=>x.name)], [fishData.map(x=>x.timestamp)], [fishData.map(x=>x.user)]]
     
     
-    
+    console.log(userUploads);
 
-//drawChart(combined1, betterFishArray);
+drawChart(combined1, betterFishArray);
     
     
     
@@ -420,7 +401,6 @@ function(){$('html, body').animate({
     $('.stolenmoved').attr('class','stolen');
 
     }
-      console.log($(this).scrollTop())
           if ($(this).scrollTop() >= 768) {
                   
      $('#select').attr('class', 'selectinactive');
@@ -465,10 +445,11 @@ var date = new Date(time);
 
 
 function loadGallery(data){
-    for(var i=0; i<data[0].length; i++){
-    var time=timestamp(parseInt(data[2][i]))
-    var timetext='Date: '+time.hour+':'+time.minute+' on '+time.day+'/'+time.month+'/'+time.year;
-    var gallery=document.getElementById('galleryContent');
+        var gallery=document.getElementById('galleryContent');
+gallery.innerHTML='<tr></tr>';
+    for(var i=0; i<data[0][0].length; i++){
+    var time=timestamp(parseInt(data[2][0][i]))
+    var timetext='Date: '+time.hour+':'+time.minute+' '+time.day+'/'+time.month+'/'+time.year;
     var row = gallery.rows[gallery.rows.length-1];
             var cellsLength=row.cells.length;
 
@@ -477,16 +458,35 @@ function loadGallery(data){
     row = gallery.rows[gallery.rows.length-1];
     var cellsLength=row.cells.length;
         var x = row.insertCell(row.cells.length-1);
-   x.innerHTML = '<div class=photo> <img src="'+data[0][i].replace('.','https://fishcloud.azurewebsites.net')+'"> <table class="photoTable"> <thead> <tr> <td colspan="2"><p class="photoFishType phototext">'+data[1][i]+'</p></td></tr><tr> <td><p class="photoDate phototext">'+timetext+'</p></td><td><p class="photoOwner phototext">BY: '+data[3][i]+'</p></td></tr></thead></table></div>'; 
+   x.innerHTML = '<div class=photo> <img src="'+data[0][0][i].replace('.','https://fishcloud.azurewebsites.net')+'"> <table class="photoTable"> <thead> <tr> <td colspan="2"><p class="photoFishType phototext">'+data[1][0][i]+'</p></td></tr><tr> <td><p class="photoDate phototext">'+timetext+'</p></td><td><p class="photoOwner phototext">BY: '+data[3][0][i]+'</p></td></tr></thead></table></div>'; 
     }else{
             var cellsLength=row.cells.length;
 
     var x = row.insertCell(row.cells.length-1);
-     x.innerHTML = '<div class=photo> <img src="'+data[0][i].replace('.','https://fishcloud.azurewebsites.net')+'"> <table class="photoTable"> <thead> <tr> <td colspan="2"><p class="photoFishType phototext">'+data[1][i]+'</p></td></tr><tr> <td><p class="photoDate phototext">'+timetext+'</p></td><td><p class="photoOwner phototext">BY: '+data[3][i]+'</p></td></tr></thead></table></div>';
+     x.innerHTML = '<div class=photo> <img src="'+data[0][0][i].replace('.','https://fishcloud.azurewebsites.net')+'"> <table class="photoTable"> <thead> <tr> <td colspan="2"><p class="photoFishType phototext">'+data[1][0][i]+'</p></td></tr><tr> <td><p class="photoDate phototext">'+timetext+'</p></td><td><p class="photoOwner phototext">BY: '+data[3][0][i]+'</p></td></tr></thead></table></div>';
 
     }
         }
 }
+
+
+function organizeFish(data){
+  var months=[{month:'Januari'}, {month:'Februari'}, {month:'Mars'}, {month:'April'}, {month:'Maj'}, {month:'Juni'}, {month:'Juli'}, {month:'Augusti'}, {month:'September'}, {month:'Oktober'}, {month:'November'}, {month:'December'}];
+    
+    for(var i=0; i<data.length; i++){
+        if(!months[data[i]['time'].month-1][data[i]['name']]){
+        months[data[i]['time'].month-1][data[i]['name']]= {name:data[i]['name'], count:1, color:data[i]['color']};
+        }else{
+           months[data[i]['time'].month-1][data[i]['name']].count++; 
+        }
+        
+        
+        
+    }
+return months;    
+    
+}
+
 
 
 function fishinlake(data){
